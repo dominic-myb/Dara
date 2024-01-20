@@ -6,7 +6,7 @@ public class SwordAttack : MonoBehaviour
 {
     public int damage = 20;
     public Collider2D swordCollider;
-    Vector2 rightAttackOffset;
+    private Vector2 rightAttackOffset;
     private void Start()
     {
         rightAttackOffset = transform.position;

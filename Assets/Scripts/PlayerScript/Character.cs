@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    int currentHealth, maxHealth = 100, currentExp, maxExp = 100, currentLvl = 1;
-    Animator animator;
+    [SerializeField]int currentHealth, maxHealth = 100, currentExp, maxExp = 100, currentLvl = 1;
+    private Animator animator;
     public HealthBar healthBar;
     public ExpBarGradient expBarGradient;
     private void Start() {
@@ -44,7 +44,7 @@ public class Character : MonoBehaviour
         currentLvl++;                               //level up
         currentExp = currentExp % maxExp;           //currentExp updates to remaining exp
         maxExp += 100;                              //Expbar updates
-        expBarGradient.SetMaxExp(maxExp,currentExp);
+        expBarGradient.SetMaxExp(maxExp,currentExp);//Set max Expbar to new
         expBarGradient.SetExp(currentExp);          //to show the exp updates when lvl up
         healthBar.SetHealth(currentHealth);         //to show the healthbar updates when lvl up
         print("Level: " + currentLvl);              //delete this if final
@@ -69,4 +69,5 @@ public class Character : MonoBehaviour
     IEnumerator Damage(){
         yield return null;
     }
+    
 }

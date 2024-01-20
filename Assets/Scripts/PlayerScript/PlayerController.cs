@@ -10,12 +10,12 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 1f;
     public float collisionOffset = 0.02f;
     public ContactFilter2D movementFilter;
-    SpriteRenderer spriteRenderer;
-    Animator animator;
+    private SpriteRenderer spriteRenderer;
+    private Animator animator;
     private Vector2 movementInput;
     private Rigidbody2D rb;
     List<RaycastHit2D> castCollisions = new List<RaycastHit2D>();
-    bool canMove = true;
+    private bool canMove = true;
     public SwordAttack swordAttack;
     void Start()
     {
