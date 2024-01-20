@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemSprite: {fileID: 21300000, guid: a209ed0b0fb6d6746a3c187e8ce117fe, type: 3}
   itemName: Clima Tact
-  dropChance: 1
+  dropChance: 20

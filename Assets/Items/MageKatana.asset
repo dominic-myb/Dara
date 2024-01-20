@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemSprite: {fileID: 21300000, guid: 98fbda7d4ccdbed45bec7e8e4cc2f5be, type: 3}
   itemName: Mage Katana
-  dropChance: 1
+  dropChance: 30

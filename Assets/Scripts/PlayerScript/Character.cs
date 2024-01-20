@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    /*
-    Check the exp bar not working if lvlup+3
-    */
     int currentHealth, maxHealth = 100, currentExp, maxExp = 100, currentLvl = 1;
     Animator animator;
     public HealthBar healthBar;
@@ -16,7 +13,6 @@ public class Character : MonoBehaviour
         animator = GetComponent<Animator>();
         healthBar.SetMaxHealth(maxHealth);
         expBarGradient.SetMaxExp(maxExp,currentExp);
-        print("Level: " + currentLvl);
     }
     private void HandleExpChange(int newExp){
         currentExp += newExp;
@@ -48,6 +44,7 @@ public class Character : MonoBehaviour
         currentLvl++;                               //level up
         currentExp = currentExp % maxExp;           //currentExp updates to remaining exp
         maxExp += 100;                              //Expbar updates
+        expBarGradient.SetMaxExp(maxExp,currentExp);
         expBarGradient.SetExp(currentExp);          //to show the exp updates when lvl up
         healthBar.SetHealth(currentHealth);         //to show the healthbar updates when lvl up
         print("Level: " + currentLvl);              //delete this if final
@@ -72,15 +69,4 @@ public class Character : MonoBehaviour
     IEnumerator Damage(){
         yield return null;
     }
-    /*
-    To-do List:
-    - add a function for getting the loot
-    
-    sample coroutine
-    for timed damage, heal
-    IEnumerator N(){
-        yield return null;
-    }
-    StartCoroutine(N());
-    */
 }

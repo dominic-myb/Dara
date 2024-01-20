@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemSprite: {fileID: 21300000, guid: 259b965af01193d46a52f1ee3b50c3e8, type: 3}
   itemName: Health Potion
-  dropChance: 100
+  dropChance: 50
