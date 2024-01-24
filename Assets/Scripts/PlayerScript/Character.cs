@@ -42,7 +42,7 @@ public class Character : MonoBehaviour
         maxHealth += 10;                            // add 10 to max health
         currentHealth = maxHealth;                  //full health after kill
         currentLvl++;                               //level up
-        currentExp = currentExp % maxExp;           //currentExp updates to remaining exp
+        currentExp %= maxExp;                       //currentExp updates to remaining exp
         maxExp += 100;                              //Expbar updates
         expBarGradient.SetMaxExp(maxExp,currentExp);//Set max Expbar to new
         expBarGradient.SetExp(currentExp);          //to show the exp updates when lvl up

@@ -9,7 +9,7 @@ public class ItemBag : MonoBehaviour
 
     ItemData GetDroppedItem(){
         int randomNumber = Random.Range(1,101); //1-100
-        List<ItemData> possibleItems = new List<ItemData>();
+        List<ItemData> possibleItems = new();
         foreach(ItemData item in itemList)
         {
             if(randomNumber <= item.dropChance){
