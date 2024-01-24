@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    public List<InventoryItem> inventory = new List<InventoryItem>();
+    public List<InventoryItem> inventory = new();
     private Dictionary<ItemData, InventoryItem> itemDictionary = new Dictionary<ItemData, InventoryItem>();
     private void OnEnable() {
         Item.OnItemCollected += Add;
