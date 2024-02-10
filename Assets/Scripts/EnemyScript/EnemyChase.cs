@@ -16,23 +16,32 @@ public class EnemyChase : MonoBehaviour
     public float distance;
     private float previousX;
     private bool hasLineOfSight = false;
+    public Transform moveSpot;
+    private float waitTime;
+    [SerializeField] private float startWaitTime = 3;
+    public float minX, maxX, minY, maxY;
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
+        waitTime = startWaitTime;
+        moveSpot.position = new UnityEngine.Vector2(Random.Range(minX, maxX), Random.Range(minY, maxY));
     }
     private void Update()
     {
         if (distance < distanceBetween && hasLineOfSight)
         {
-            StartFollow();
+            StartMoving();
             transform.position = UnityEngine.Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
+            waitTime = startWaitTime;
         }
         else
         {
-            StopFollow();
+            StopMoving();
+            if (waitTime <= 0) StartPatrol();
+            else waitTime -= Time.deltaTime;
         }
     }
     private void FixedUpdate()
@@ -65,7 +74,7 @@ public class EnemyChase : MonoBehaviour
             Debug.DrawRay(transform.position, player.transform.position - transform.position, Color.red);
         }
     }
-    private void StartFollow()
+    private void StartMoving()
     {
         float currentX = transform.position.x;
         if (currentX > previousX) spriteRenderer.flipX = false;
@@ -73,8 +82,25 @@ public class EnemyChase : MonoBehaviour
         previousX = currentX;
         animator.SetBool("isMoving", true);
     }
-    private void StopFollow()
+    private void StopMoving()
     {
         animator.SetBool("isMoving", false);
+    }
+    private void StartPatrol()
+    {
+        StartMoving();
+        transform.position = UnityEngine.Vector2.MoveTowards(transform.position, moveSpot.position, speed * Time.deltaTime);
+        if (UnityEngine.Vector2.Distance(transform.position, moveSpot.position) < 0.2f)
+        {
+            if (waitTime <= 0)
+            {
+                moveSpot.position = new UnityEngine.Vector2(Random.Range(minX, maxX), Random.Range(minY, maxY));
+                waitTime = startWaitTime;
+            }
+            else
+            {
+                waitTime -= Time.deltaTime;
+            }
+        }
     }
 }
