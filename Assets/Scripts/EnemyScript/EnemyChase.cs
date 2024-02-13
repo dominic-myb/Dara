@@ -20,6 +20,7 @@ public class EnemyChase : MonoBehaviour
     private float waitTime;
     [SerializeField] private float startWaitTime = 3;
     public float minX, maxX, minY, maxY;
+    public bool shouldMove;
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
@@ -88,9 +89,40 @@ public class EnemyChase : MonoBehaviour
     }
     private void StartPatrol()
     {
-        StartMoving();
-        transform.position = UnityEngine.Vector2.MoveTowards(transform.position, moveSpot.position, speed * Time.deltaTime);
-        if (UnityEngine.Vector2.Distance(transform.position, moveSpot.position) < 0.2f)
+        UnityEngine.Vector2 direction = moveSpot.position - transform.position;
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction.normalized, distance);
+        bool hitBlock = false;
+
+        foreach (RaycastHit2D hit in hits)
+        {
+            if (hit.collider != null)
+            {
+                if (hit.collider.CompareTag("Block"))
+                {
+                    hitBlock = true;
+                    break;
+                }
+            }
+        }
+        shouldMove = !hitBlock;
+        if (shouldMove)
+        {
+            StartMoving();
+            transform.position = UnityEngine.Vector2.MoveTowards(transform.position, moveSpot.position, speed * Time.deltaTime);
+            if (UnityEngine.Vector2.Distance(transform.position, moveSpot.position) < 0.2f)
+            {
+                if (waitTime <= 0)
+                {
+                    moveSpot.position = new UnityEngine.Vector2(Random.Range(minX, maxX), Random.Range(minY, maxY));
+                    waitTime = startWaitTime;
+                }
+                else
+                {
+                    waitTime -= Time.deltaTime;
+                }
+            }
+        }
+        else
         {
             if (waitTime <= 0)
             {
