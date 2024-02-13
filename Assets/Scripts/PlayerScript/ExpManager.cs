@@ -8,11 +8,14 @@ public class ExpManager : MonoBehaviour
 
     public delegate void ExpChangeHandler(int amount);
     public event ExpChangeHandler OnExpChange;
-    private void Awake() {
-        if(Instance!=null && Instance!=this){
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
             Destroy(this);
         }
-        else{
+        else
+        {
             Instance = this;
         }
     }

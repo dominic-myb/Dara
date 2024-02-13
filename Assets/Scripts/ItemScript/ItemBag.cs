@@ -7,17 +7,20 @@ public class ItemBag : MonoBehaviour
     public GameObject droppedItemPrefab;
     public List<ItemData> itemList = new List<ItemData>();
 
-    ItemData GetDroppedItem(){
-        int randomNumber = Random.Range(1,101); //1-100
+    ItemData GetDroppedItem()
+    {
+        int randomNumber = Random.Range(1, 101); //1-100
         List<ItemData> possibleItems = new();
-        foreach(ItemData item in itemList)
+        foreach (ItemData item in itemList)
         {
-            if(randomNumber <= item.dropChance){
+            if (randomNumber <= item.dropChance)
+            {
                 possibleItems.Add(item);
             }
         }
-        if(possibleItems.Count>0){
-            ItemData droppedItem = possibleItems[Random.Range(0,possibleItems.Count)];
+        if (possibleItems.Count > 0)
+        {
+            ItemData droppedItem = possibleItems[Random.Range(0, possibleItems.Count)];
             return droppedItem;
         }
         Debug.Log("No loot dropped!");
@@ -26,7 +29,8 @@ public class ItemBag : MonoBehaviour
     public void InstantiateLoot(Vector3 spawnPosition)
     {
         ItemData droppedItem = GetDroppedItem();
-        if(droppedItem!=null){
+        if (droppedItem != null)
+        {
             GameObject lootGameObject = Instantiate(droppedItemPrefab, spawnPosition, Quaternion.identity);
             lootGameObject.GetComponent<SpriteRenderer>().sprite = droppedItem.itemSprite;
 

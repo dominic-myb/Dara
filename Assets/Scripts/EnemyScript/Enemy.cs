@@ -10,18 +10,21 @@ public class Enemy : MonoBehaviour
     public HealthBar healthBar;
     private EnemyChase enemyChase;
     private CapsuleCollider2D capsuleCollider2D;
-    [SerializeField]private GameObject player; 
-    [SerializeField]private Character character;
-    private int maxHealth = 100;        
+    [SerializeField] private GameObject player;
+    [SerializeField] private Character character;
+    private int maxHealth = 100;
     public int currentHealth;
     private int expAmount = 30;         //have manager of this
     public int damage = 5;              //have manager of this
-    
-    private void Start() {
-        if (animator == null) {
+
+    private void Start()
+    {
+        if (animator == null)
+        {
             Debug.LogError("Animator not assigned in Inspector. Assign it!");
         }
-        if (healthBar == null) {
+        if (healthBar == null)
+        {
             Debug.LogError("HealthBar not assigned in Inspector. Assign it!");
         }
         capsuleCollider2D = GetComponent<CapsuleCollider2D>();
@@ -30,18 +33,19 @@ public class Enemy : MonoBehaviour
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
     }
-   
+
     public void TakeDamage(int amount)
     {
         currentHealth -= amount;
         healthBar.SetHealth(currentHealth);
         Hurt();
-        if(currentHealth <= 0){
-                this.healthBar.enabled = false;
-                this.enemyChase.enabled = false;
-                this.capsuleCollider2D.enabled = false;
-                Defeated(); 
-            }
+        if (currentHealth <= 0)
+        {
+            this.healthBar.enabled = false;
+            this.enemyChase.enabled = false;
+            this.capsuleCollider2D.enabled = false;
+            Defeated();
+        }
     }
     public void Hurt()
     {
@@ -57,9 +61,10 @@ public class Enemy : MonoBehaviour
     {
         Destroy(gameObject);
     }
-    public void OnTriggerEnter2D(Collider2D other) {
-        if(other.CompareTag("Player"))
-        { 
+    public void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
             character.TakeDamage(damage);
         }
     }

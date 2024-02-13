@@ -26,14 +26,14 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(canMove)
+        if (canMove)
         {
-            if(movementInput != Vector2.zero)
+            if (movementInput != Vector2.zero)
             {
                 bool success = TryMove(movementInput);
-                if(!success)
+                if (!success)
                 {
-                    success = TryMove(new Vector2 (movementInput.x,0));
+                    success = TryMove(new Vector2(movementInput.x, 0));
                 }
                 if (!success)
                 {
@@ -45,11 +45,11 @@ public class PlayerController : MonoBehaviour
             {
                 animator.SetBool("isMoving", false);
             }
-            if(movementInput.x < 0)
+            if (movementInput.x < 0)
             {
                 spriteRenderer.flipX = true;
             }
-            else if(movementInput.x > 0)
+            else if (movementInput.x > 0)
             {
                 spriteRenderer.flipX = false;
             }
@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
     }
     private bool TryMove(Vector2 direction)
     {
-        if(direction != Vector2.zero)
+        if (direction != Vector2.zero)
         {
             int count = rb.Cast(
                     direction,
@@ -65,16 +65,16 @@ public class PlayerController : MonoBehaviour
                     castCollisions,
                     moveSpeed * Time.fixedDeltaTime + collisionOffset
                 );
-                
-                if(count == 0)
-                {
-                    rb.MovePosition(rb.position + moveSpeed * Time.fixedDeltaTime * direction);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+
+            if (count == 0)
+            {
+                rb.MovePosition(rb.position + moveSpeed * Time.fixedDeltaTime * direction);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviour
     public void SwordAttack()
     {
         LockMovement();
-        if(spriteRenderer.flipX == true)
+        if (spriteRenderer.flipX == true)
         {
             swordAttack.AttackLeft();
         }
