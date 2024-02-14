@@ -9,7 +9,7 @@ public class SwordAttack : MonoBehaviour
     public Collider2D swordCollider;
 
     //*PUBLIC*//
-    public int damage = 20; //!have a manager of this
+    [SerializeField]private int damage = 20; //!have a manager of this
 
     private void Start()
     {
