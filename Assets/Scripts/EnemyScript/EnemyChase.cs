@@ -6,14 +6,20 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
+// Todo List
+//! 1. Enemy must target the player collider instead of player transform position, to get away with stuck issue
+//! 2. I apply _playerCollider currently, still not working  
+//? 3. apply navmesh to the game 
+
 public class EnemyChase : MonoBehaviour
 {
     //*OBJECTS*//
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
     private GameObject _player;
-    [SerializeField]private BoxCollider2D _playerCollider;
+    private Collider2D _playerCollider;
     private Rigidbody2D _rigidBody;
+    private Character _character;
     public Transform moveSpot;
 
     //*PRIVATE*//
@@ -31,19 +37,15 @@ public class EnemyChase : MonoBehaviour
     private void Start()
     {
         _player = GameObject.FindGameObjectWithTag("Player");
-        if (_player != null)
-        {
-            _playerCollider = _player.GetComponent<BoxCollider2D>();
-            if (_playerCollider != null)
-            {
-                _player = _playerCollider.gameObject;
-            }
-        }
+        _playerCollider = _player.GetComponent<Collider2D>();
+        _character = _player.GetComponent<Character>();
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _rigidBody = GetComponent<Rigidbody2D>();
         _waitTime = startWaitTime;
         moveSpot.position = new UnityEngine.Vector2(Random.Range(minX, maxX), Random.Range(minY, maxY));
+        if (_player == null) Debug.LogError("Player not assigned in the Inspector.");
+        if (_playerCollider == null) Debug.LogError("Player not assigned in the Inspector.");
     }
     private void Update()
     {
@@ -55,46 +57,49 @@ public class EnemyChase : MonoBehaviour
     }
     private void EnemyMove()
     {
-        if (distance < distanceBetween && _hasLineOfSight && shouldMove)
+        if (distance < distanceBetween && _hasLineOfSight && shouldMove && _character.isAlive)
         {
             StartMovingAnimation();
-            transform.position = UnityEngine.Vector2.MoveTowards(transform.position, _player.transform.position, _moveSpeed * Time.deltaTime);
+            transform.position = UnityEngine.Vector2.MoveTowards(transform.position, _playerCollider.transform.position, _moveSpeed * Time.deltaTime);
             _waitTime = startWaitTime;
         }
         else
         {
-            StopMovingAnimation();
-            if (_waitTime <= 0) StartPatrol();
+            if (_character.isAlive) StopMovingAnimation();
+            if (_waitTime <= 0 || !_character.isAlive) StartPatrol();
             else _waitTime -= Time.deltaTime;
         }
     }
     private void SightAndDistanceCheck()
     {
-        distance = UnityEngine.Vector2.Distance(transform.position, _player.transform.position);
-        UnityEngine.Vector2 direction = _player.transform.position - transform.position;
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction.normalized, distance);
-        bool hitBlock = false;
-        foreach (RaycastHit2D hit in hits)
+        if (_player != null)
         {
-            if (hit.collider != null)
+            distance = UnityEngine.Vector2.Distance(transform.position, _playerCollider.transform.position);
+            UnityEngine.Vector2 direction = _playerCollider.transform.position - transform.position;
+            RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction.normalized, distance);
+            bool hitBlock = false;
+            foreach (RaycastHit2D hit in hits)
             {
-                if (hit.collider.CompareTag("Block"))
+                if (hit.collider != null)
                 {
-                    hitBlock = true;
-                    break;
+                    if (hit.collider.CompareTag("Block"))
+                    {
+                        hitBlock = true;
+                        break;
+                    }
                 }
             }
-        }
-        _hasLineOfSight = !hitBlock;
-        shouldMove = !hitBlock;
-        //!Remove this when final
-        if (distance < distanceBetween && _hasLineOfSight && shouldMove) 
-        {
-            Debug.DrawRay(transform.position, direction, Color.green);
-        }
-        else
-        {
-            Debug.DrawRay(transform.position, direction, Color.red);
+            _hasLineOfSight = !hitBlock;
+            shouldMove = !hitBlock;
+            //!Remove this when final
+            if (distance < distanceBetween && _hasLineOfSight && shouldMove)
+            {
+                Debug.DrawRay(transform.position, direction, Color.green);
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, direction, Color.red);
+            }
         }
     }
     private void StartMovingAnimation()
