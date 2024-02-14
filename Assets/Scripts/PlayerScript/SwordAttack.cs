@@ -4,22 +4,26 @@ using UnityEngine;
 
 public class SwordAttack : MonoBehaviour
 {
-    public int damage = 20;
+    //*OBJECTS*//
+    private Vector2 _rightAttackOffset;
     public Collider2D swordCollider;
-    private Vector2 rightAttackOffset;
+
+    //*PUBLIC*//
+    public int damage = 20; //!have a manager of this
+
     private void Start()
     {
-        rightAttackOffset = transform.position;
+        _rightAttackOffset = transform.position;
     }
     public void AttackRight()
     {
         swordCollider.enabled = true;
-        transform.localPosition = rightAttackOffset;
+        transform.localPosition = _rightAttackOffset;
     }
     public void AttackLeft()
     {
         swordCollider.enabled = true;
-        transform.localPosition = new Vector3(rightAttackOffset.x * -1, rightAttackOffset.y);
+        transform.localPosition = new Vector3(_rightAttackOffset.x * -1, _rightAttackOffset.y);
     }
     public void StopAttack()
     {

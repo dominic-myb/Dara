@@ -7,51 +7,62 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 1f;
-    public float collisionOffset = 0.02f;
+    //*OBJECTS*//
+    private SpriteRenderer _spriteRenderer;
+    private Animator _animator;
+    private Vector2 _movementInput;
+    private Rigidbody2D _rigidBody;
     public ContactFilter2D movementFilter;
-    private SpriteRenderer spriteRenderer;
-    private Animator animator;
-    private Vector2 movementInput;
-    private Rigidbody2D rb;
-    List<RaycastHit2D> castCollisions = new List<RaycastHit2D>();
-    private bool canMove = true;
     public SwordAttack swordAttack;
-    void Start()
+    List<RaycastHit2D> castCollisions = new List<RaycastHit2D>();
+
+    //*PRIVATE*//
+    private bool canMove = true;
+    private float collisionOffset = 0.02f;
+
+    //*PUBLIC*//
+    public float moveSpeed = 1f;            //!have a manager of this
+
+    private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        _rigidBody = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void FixedUpdate()
     {
+        PlayerMove();
+    }
+    private void PlayerMove()
+    {
         if (canMove)
         {
-            if (movementInput != Vector2.zero)
+            if (_movementInput != Vector2.zero)
             {
-                bool success = TryMove(movementInput);
+                bool success = TryMove(_movementInput);
                 if (!success)
                 {
-                    success = TryMove(new Vector2(movementInput.x, 0));
+                    success = TryMove(new Vector2(_movementInput.x, 0));
                 }
                 if (!success)
                 {
-                    success = TryMove(new Vector2(0, movementInput.y));
+                    success = TryMove(new Vector2(0, _movementInput.y));
                 }
-                animator.SetBool("isMoving", success);
+                _animator.SetBool("isMoving", success);
             }
             else
             {
-                animator.SetBool("isMoving", false);
+                _animator.SetBool("isMoving", false);
             }
-            if (movementInput.x < 0)
+            
+            if (_movementInput.x < 0)
             {
-                spriteRenderer.flipX = true;
+                _spriteRenderer.flipX = true;
             }
-            else if (movementInput.x > 0)
+            else if (_movementInput.x > 0)
             {
-                spriteRenderer.flipX = false;
+                _spriteRenderer.flipX = false;
             }
         }
     }
@@ -59,7 +70,7 @@ public class PlayerController : MonoBehaviour
     {
         if (direction != Vector2.zero)
         {
-            int count = rb.Cast(
+            int count = _rigidBody.Cast(
                     direction,
                     movementFilter,
                     castCollisions,
@@ -68,34 +79,30 @@ public class PlayerController : MonoBehaviour
 
             if (count == 0)
             {
-                rb.MovePosition(rb.position + moveSpeed * Time.fixedDeltaTime * direction);
+                _rigidBody.MovePosition(_rigidBody.position + moveSpeed * Time.fixedDeltaTime * direction);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            else return false;
         }
-        else
-        {
-            return false;
-        }
+
+        else return false;
     }
 
     void OnMove(InputValue movementValue)
     {
-        movementInput = movementValue.Get<Vector2>();
+        _movementInput = movementValue.Get<Vector2>();
     }
 
     void OnFire()
     {
-        animator.SetTrigger("swordAttack");
+        _animator.SetTrigger("swordAttack");
     }
 
     public void SwordAttack()
     {
         LockMovement();
-        if (spriteRenderer.flipX == true)
+        if (_spriteRenderer.flipX == true)
         {
             swordAttack.AttackLeft();
         }

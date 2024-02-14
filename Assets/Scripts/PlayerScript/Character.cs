@@ -4,22 +4,26 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    [SerializeField] int currentHealth, maxHealth = 100, currentExp, maxExp = 100, currentLvl = 1;
+    //*OBJECTS*//
     private Animator animator;
     public HealthBar healthBar;
     public ExpBarGradient expBarGradient;
+
+    //*PRIVATE*//
+    [SerializeField] private int _currentHealth, _maxHealth = 100, _currentExp, _maxExp = 100, _currentLvl = 1; //!Have a manager of this
+
     private void Start()
     {
-        currentHealth = maxHealth;
+        _currentHealth = _maxHealth;
         animator = GetComponent<Animator>();
-        healthBar.SetMaxHealth(maxHealth);
-        expBarGradient.SetMaxExp(maxExp, currentExp);
+        healthBar.SetMaxHealth(_maxHealth);
+        expBarGradient.SetMaxExp(_maxExp, _currentExp);
     }
     private void HandleExpChange(int newExp)
     {
-        currentExp += newExp;
-        expBarGradient.SetExp(currentExp);
-        if (currentExp >= maxExp)
+        _currentExp += newExp;
+        expBarGradient.SetExp(_currentExp);
+        if (_currentExp >= _maxExp)
         {
             LevelUp();
         }
@@ -27,9 +31,9 @@ public class Character : MonoBehaviour
     public void TakeDamage(int amount)
     {
         //Sound Effect Here
-        currentHealth -= amount;
-        healthBar.SetHealth(currentHealth);
-        if (currentHealth <= 0)
+        _currentHealth -= amount;
+        healthBar.SetHealth(_currentHealth);
+        if (_currentHealth <= 0)
         {
             Defeated();
         }
@@ -37,24 +41,24 @@ public class Character : MonoBehaviour
     public void Heal(int amount)
     {
         //Sound Effect here
-        currentHealth += amount;
+        _currentHealth += amount;
 
-        if (currentHealth > maxHealth)
+        if (_currentHealth > _maxHealth)
         {
-            currentHealth = maxHealth;
+            _currentHealth = _maxHealth;
         }
     }
     private void LevelUp()
     {
-        maxHealth += 10;                            // add 10 to max health
-        currentHealth = maxHealth;                  //full health after kill
-        currentLvl++;                               //level up
-        currentExp %= maxExp;                       //currentExp updates to remaining exp
-        maxExp += 100;                              //Expbar updates
-        expBarGradient.SetMaxExp(maxExp, currentExp);//Set max Expbar to new
-        expBarGradient.SetExp(currentExp);          //to show the exp updates when lvl up
-        healthBar.SetHealth(currentHealth);         //to show the healthbar updates when lvl up
-        print("Level: " + currentLvl);              //delete this if final
+        _maxHealth += 10;                            // add 10 to max health
+        _currentHealth = _maxHealth;                  //full health after kill
+        _currentLvl++;                               //level up
+        _currentExp %= _maxExp;                       //currentExp updates to remaining exp
+        _maxExp += 100;                              //Expbar updates
+        expBarGradient.SetMaxExp(_maxExp, _currentExp);//Set max Expbar to new
+        expBarGradient.SetExp(_currentExp);          //to show the exp updates when lvl up
+        healthBar.SetHealth(_currentHealth);         //to show the healthbar updates when lvl up
+        print("Level: " + _currentLvl);              //!delete this if final
     }
     private void OnEnable()
     {
@@ -80,7 +84,7 @@ public class Character : MonoBehaviour
     {
         animator.SetTrigger("Defeated");
     }
-    IEnumerator Damage()
+    IEnumerator Damage()//!delete this if final
     {
         yield return null;
     }

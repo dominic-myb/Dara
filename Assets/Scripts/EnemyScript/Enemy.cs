@@ -6,56 +6,54 @@ using UnityEngine.TextCore.Text;
 
 public class Enemy : MonoBehaviour
 {
+    //*OBJECTS*//
+    private EnemyChase _enemyChase;
+    private CapsuleCollider2D _enemyCollider;
+    [SerializeField] private GameObject _player;
+    [SerializeField] private Character _character;
     public Animator animator;
     public HealthBar healthBar;
-    private EnemyChase enemyChase;
-    private CapsuleCollider2D capsuleCollider2D;
-    [SerializeField] private GameObject player;
-    [SerializeField] private Character character;
-    private int maxHealth = 100;
-    public int currentHealth;
-    private int expAmount = 30;         //have manager of this
-    public int damage = 5;              //have manager of this
 
+    //*PRIVATE*//
+    private int _maxHealth = 100;        //!have manager of this
+    private int _expAmount = 30;         //!have manager of this
+
+    //*PUBLIC*//
+    public int damage = 5;               //!have manager of this
+    public int currentHealth;
     private void Start()
     {
-        if (animator == null)
-        {
-            Debug.LogError("Animator not assigned in Inspector. Assign it!");
-        }
-        if (healthBar == null)
-        {
-            Debug.LogError("HealthBar not assigned in Inspector. Assign it!");
-        }
-        capsuleCollider2D = GetComponent<CapsuleCollider2D>();
+        if (animator == null) Debug.LogError("Animator not assigned in Inspector.");
+        if (healthBar == null) Debug.LogError("HealthBar not assigned in Inspector.");
+        _enemyCollider = GetComponent<CapsuleCollider2D>();
+        _enemyChase = GetComponent<EnemyChase>();
         animator = GetComponent<Animator>();
-        enemyChase = GetComponent<EnemyChase>();
-        currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
+        currentHealth = _maxHealth;
+        healthBar.SetMaxHealth(_maxHealth);
     }
 
     public void TakeDamage(int amount)
     {
         currentHealth -= amount;
         healthBar.SetHealth(currentHealth);
-        Hurt();
+        HurtAnimation();
         if (currentHealth <= 0)
         {
-            this.healthBar.enabled = false;
-            this.enemyChase.enabled = false;
-            this.capsuleCollider2D.enabled = false;
-            Defeated();
+            healthBar.enabled = false;
+            _enemyChase.enabled = false;
+            _enemyCollider.enabled = false;
+            EnemyDefeated();
         }
     }
-    public void Hurt()
+    public void HurtAnimation()
     {
         animator.SetTrigger("Hurt");
     }
-    public void Defeated()
+    public void EnemyDefeated()
     {
         animator.SetTrigger("Defeated");
         GetComponent<ItemBag>().InstantiateLoot(transform.position);
-        ExpManager.Instance.AddExperience(expAmount);
+        ExpManager.Instance.AddExperience(_expAmount);
     }
     public void RemoveEnemy()
     {
@@ -65,7 +63,7 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            character.TakeDamage(damage);
+            _character.TakeDamage(damage);
         }
     }
 }
