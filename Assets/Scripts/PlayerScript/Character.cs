@@ -8,6 +8,7 @@ public class Character : MonoBehaviour
     private Animator animator;
     public HealthBar healthBar;
     public ExpBarGradient expBarGradient;
+    public bool isAlive = true;
 
     //*PRIVATE*//
     [SerializeField] private int _currentHealth, _maxHealth = 100, _currentExp, _maxExp = 100, _currentLvl = 1; //!Have a manager of this
@@ -35,6 +36,7 @@ public class Character : MonoBehaviour
         healthBar.SetHealth(_currentHealth);
         if (_currentHealth <= 0)
         {
+            isAlive = false;
             Defeated();
         }
     }
@@ -70,15 +72,8 @@ public class Character : MonoBehaviour
     }
     public void RemovePlayer()
     {
-        if (gameObject != null)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Debug.Log("Player not Set!");
-        }
-
+        if (gameObject != null) Destroy(gameObject);
+        else Debug.Log("Player not Set!");
     }
     private void Defeated()
     {
