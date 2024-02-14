@@ -3,56 +3,77 @@ using System.Collections.Generic;
 using System.Numerics;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class EnemyChase : MonoBehaviour
 {
-    private Animator animator;
-    private SpriteRenderer spriteRenderer;
-    private GameObject player;
-    private Rigidbody2D rb;
-    private readonly float speed = 1f;
-    public float distanceBetween = 2f;
-    public float distance;
-    private float previousX;
-    private bool hasLineOfSight = false;
+    //*OBJECTS*//
+    private Animator _animator;
+    private SpriteRenderer _spriteRenderer;
+    private GameObject _player;
+    [SerializeField]private BoxCollider2D _playerCollider;
+    private Rigidbody2D _rigidBody;
     public Transform moveSpot;
-    private float waitTime;
-    [SerializeField] private float startWaitTime = 3;
-    public float minX, maxX, minY, maxY;
+
+    //*PRIVATE*//
+    private readonly float _moveSpeed = 1f; //movement speed of enemy
+    private float _previousX; //horizontal orientation of sprite
+    private float _waitTime;
+    private bool _hasLineOfSight = false; //enemy to player raycast
+    [SerializeField] private float startWaitTime = 3; //time for changing position
+    [SerializeField] private float minX, maxX, minY, maxY; //area of patrol
+
+    //*PUBLIC*//
+    public float distanceBetween = 2f; //enemy to player
+    public float distance;
     public bool shouldMove;
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        rb = GetComponent<Rigidbody2D>();
-        waitTime = startWaitTime;
+        _player = GameObject.FindGameObjectWithTag("Player");
+        if (_player != null)
+        {
+            _playerCollider = _player.GetComponent<BoxCollider2D>();
+            if (_playerCollider != null)
+            {
+                _player = _playerCollider.gameObject;
+            }
+        }
+        _animator = GetComponent<Animator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _rigidBody = GetComponent<Rigidbody2D>();
+        _waitTime = startWaitTime;
         moveSpot.position = new UnityEngine.Vector2(Random.Range(minX, maxX), Random.Range(minY, maxY));
     }
     private void Update()
     {
-        if (distance < distanceBetween && hasLineOfSight)
-        {
-            StartMoving();
-            transform.position = UnityEngine.Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
-            waitTime = startWaitTime;
-        }
-        else
-        {
-            StopMoving();
-            if (waitTime <= 0) StartPatrol();
-            else waitTime -= Time.deltaTime;
-        }
+        EnemyMove();
     }
     private void FixedUpdate()
     {
-        distance = UnityEngine.Vector2.Distance(transform.position, player.transform.position);
-        UnityEngine.Vector2 direction = player.transform.position - transform.position;
-
+        SightAndDistanceCheck();
+    }
+    private void EnemyMove()
+    {
+        if (distance < distanceBetween && _hasLineOfSight && shouldMove)
+        {
+            StartMovingAnimation();
+            transform.position = UnityEngine.Vector2.MoveTowards(transform.position, _player.transform.position, _moveSpeed * Time.deltaTime);
+            _waitTime = startWaitTime;
+        }
+        else
+        {
+            StopMovingAnimation();
+            if (_waitTime <= 0) StartPatrol();
+            else _waitTime -= Time.deltaTime;
+        }
+    }
+    private void SightAndDistanceCheck()
+    {
+        distance = UnityEngine.Vector2.Distance(transform.position, _player.transform.position);
+        UnityEngine.Vector2 direction = _player.transform.position - transform.position;
         RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction.normalized, distance);
         bool hitBlock = false;
-
         foreach (RaycastHit2D hit in hits)
         {
             if (hit.collider != null)
@@ -64,35 +85,35 @@ public class EnemyChase : MonoBehaviour
                 }
             }
         }
-        hasLineOfSight = !hitBlock;
-
-        if (distance < distanceBetween && hasLineOfSight)
+        _hasLineOfSight = !hitBlock;
+        shouldMove = !hitBlock;
+        //!Remove this when final
+        if (distance < distanceBetween && _hasLineOfSight && shouldMove) 
         {
-            Debug.DrawRay(transform.position, player.transform.position - transform.position, Color.green);
+            Debug.DrawRay(transform.position, direction, Color.green);
         }
         else
         {
-            Debug.DrawRay(transform.position, player.transform.position - transform.position, Color.red);
+            Debug.DrawRay(transform.position, direction, Color.red);
         }
     }
-    private void StartMoving()
+    private void StartMovingAnimation()
     {
         float currentX = transform.position.x;
-        if (currentX > previousX) spriteRenderer.flipX = false;
-        else if (currentX < previousX) spriteRenderer.flipX = true;
-        previousX = currentX;
-        animator.SetBool("isMoving", true);
+        if (currentX > _previousX) _spriteRenderer.flipX = false;
+        else if (currentX < _previousX) _spriteRenderer.flipX = true;
+        _previousX = currentX;
+        _animator.SetBool("isMoving", true);
     }
-    private void StopMoving()
+    private void StopMovingAnimation()
     {
-        animator.SetBool("isMoving", false);
+        _animator.SetBool("isMoving", false);
     }
     private void StartPatrol()
     {
         UnityEngine.Vector2 direction = moveSpot.position - transform.position;
         RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction.normalized, distance);
         bool hitBlock = false;
-
         foreach (RaycastHit2D hit in hits)
         {
             if (hit.collider != null)
@@ -107,32 +128,28 @@ public class EnemyChase : MonoBehaviour
         shouldMove = !hitBlock;
         if (shouldMove)
         {
-            StartMoving();
-            transform.position = UnityEngine.Vector2.MoveTowards(transform.position, moveSpot.position, speed * Time.deltaTime);
+            StartMovingAnimation();
+            transform.position = UnityEngine.Vector2.MoveTowards(transform.position, moveSpot.position, _moveSpeed * Time.deltaTime);
             if (UnityEngine.Vector2.Distance(transform.position, moveSpot.position) < 0.2f)
             {
-                if (waitTime <= 0)
+                if (_waitTime <= 0)
                 {
                     moveSpot.position = new UnityEngine.Vector2(Random.Range(minX, maxX), Random.Range(minY, maxY));
-                    waitTime = startWaitTime;
+                    _waitTime = startWaitTime;
                 }
-                else
-                {
-                    waitTime -= Time.deltaTime;
-                }
+
+                else _waitTime -= Time.deltaTime;
             }
         }
         else
         {
-            if (waitTime <= 0)
+            if (_waitTime <= 0)
             {
                 moveSpot.position = new UnityEngine.Vector2(Random.Range(minX, maxX), Random.Range(minY, maxY));
-                waitTime = startWaitTime;
+                _waitTime = startWaitTime;
             }
-            else
-            {
-                waitTime -= Time.deltaTime;
-            }
+
+            else _waitTime -= Time.deltaTime;
         }
     }
 }
