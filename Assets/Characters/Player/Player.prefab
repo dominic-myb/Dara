@@ -774,8 +774,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1039932ea2cbb345a21b24f16dc45f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
-  collisionOffset: 0.05
   movementFilter:
     useTriggers: 0
     useLayerMask: 0
@@ -791,6 +789,7 @@ MonoBehaviour:
     minNormalAngle: 0
     maxNormalAngle: 0
   swordAttack: {fileID: 3037424636767048680}
+  moveSpeed: 2
 --- !u!50 &6419229984277017508
 Rigidbody2D:
   serializedVersion: 4
@@ -898,6 +897,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthBar: {fileID: 6278632999673078131}
   expBarGradient: {fileID: 1509249457859269848}
+  isAlive: 1
+  _currentHealth: 0
+  _maxHealth: 100
+  _currentExp: 0
+  _maxExp: 100
+  _currentLvl: 1
 --- !u!114 &1392727491535460423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1134,5 +1139,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d420e4372efe0b84eb775ce2c7eabdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 20
   swordCollider: {fileID: 1693872360213962521}
+  damage: 100
