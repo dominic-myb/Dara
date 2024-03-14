@@ -446,11 +446,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 177475201}
+  - component: {fileID: 177475205}
   - component: {fileID: 177475204}
   - component: {fileID: 177475203}
   - component: {fileID: 177475202}
   m_Layer: 5
-  m_Name: A
+  m_Name: Attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -557,6 +558,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 177475200}
   m_CullTransparentMesh: 1
+--- !u!114 &177475205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 177475200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a989deb7b981854ba5e1b804f64416c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _player: {fileID: 1999335106}
 --- !u!1 &269704711
 GameObject:
   m_ObjectHideFlags: 0
@@ -3758,7 +3772,7 @@ GameObject:
   - component: {fileID: 1235262710}
   - component: {fileID: 1235262712}
   m_Layer: 5
-  m_Name: B
+  m_Name: Bag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3803,8 +3817,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 27069535fa70a454dabeefc54396a3ff, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 576669875, guid: 27069535fa70a454dabeefc54396a3ff, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -3840,7 +3854,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -3851,7 +3865,7 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 116573894, guid: 27069535fa70a454dabeefc54396a3ff, type: 3}
     m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
@@ -17052,7 +17066,7 @@ PrefabInstance:
     - target: {fileID: 23145297775848904, guid: a5d118e8955ce944bb213069f2e62ad7, type: 3}
       propertyPath: m_Actions
       value: 
-      objectReference: {fileID: -944628639613478452, guid: a5da0f18d4eac5045a918ca7fce5ac2d, type: 3}
+      objectReference: {fileID: -944628639613478452, guid: e38d41ad1a4f3af4189191f16189ecbc, type: 3}
     - target: {fileID: 23145297775848904, guid: a5d118e8955ce944bb213069f2e62ad7, type: 3}
       propertyPath: m_DefaultControlScheme
       value: 
@@ -17287,7 +17301,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6813584840709785268, guid: a5d118e8955ce944bb213069f2e62ad7, type: 3}
       propertyPath: moveSpeed
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6813584840709785268, guid: a5d118e8955ce944bb213069f2e62ad7, type: 3}
       propertyPath: collisionOffset
