@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     //*OBJECTS*//
     private SpriteRenderer _spriteRenderer;
-    private Animator _animator;
+    public Animator _animator;
     private Vector2 _movementInput;
     private Rigidbody2D _rigidBody;
     public ContactFilter2D movementFilter;
@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
         _movementInput = movementValue.Get<Vector2>();
     }
 
-    void OnFire()
+    public void OnFire()
     {
         _animator.SetTrigger("swordAttack");
     }
